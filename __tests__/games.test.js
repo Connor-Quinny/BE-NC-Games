@@ -3,7 +3,6 @@ const request = require("supertest")
 const testData = require("../db/data/test-data")
 const db = require("../db/connection")
 const seed = require("../db/seeds/seed")
-const categories = require("../db/data/test-data/categories.js")
 
 beforeEach(() => {
     return seed(testData)
