@@ -13,7 +13,7 @@ afterAll(() => {
     return db.end()
 })
 
-describe.only("GET", () => {
+describe("GET", () => {
     describe("GET /api/categories", () => {
         it('200: should respond with an array of objects with a slug and description', () => {
             return request(app)
@@ -30,5 +30,13 @@ describe.only("GET", () => {
                 })
             })
         });
+        it.only("400: should respond with an error message when the wrong endpoint is called", () => {
+            return request(app)
+            .get("/api/categori3s/")
+            .expect(404)
+            .then(({body}) => {
+                expect(body.msg).toBe("not found")
+            })
+        })
     })
 })
