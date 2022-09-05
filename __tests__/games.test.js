@@ -3,7 +3,6 @@ const request = require("supertest")
 const testData = require("../db/data/test-data")
 const db = require("../db/connection")
 const seed = require("../db/seeds/seed")
-const categories = require("../db/data/test-data/categories.js")
 
 beforeEach(() => {
     return seed(testData)
@@ -30,7 +29,7 @@ describe("GET", () => {
                 })
             })
         });
-        it.only("400: should respond with an error message when the wrong endpoint is called", () => {
+        it("404: should respond with an error message when the wrong endpoint is called", () => {
             return request(app)
             .get("/api/categori3s/")
             .expect(404)
