@@ -29,7 +29,7 @@ describe("GET", () => {
                 })
             })
         });
-        it.only("400: should respond with an error message when the wrong endpoint is called", () => {
+        it("400: should respond with an error message when the wrong endpoint is called", () => {
             return request(app)
             .get("/api/categori3s/")
             .expect(404)
@@ -38,4 +38,28 @@ describe("GET", () => {
             })
         })
     })
+})
+
+describe.only("GET /api/reviews/:review_id", () => {
+    it('200: should respond with an object of the correct review', () => {
+        return request(app)
+        .get(`/api/reviews/3`)
+        .expect(200)
+        .then(({body}) => {
+            console.log(body.review, "<<<")
+            expect(typeof body.review).toBe('object')
+            expect(body.review).toMatchObject( {
+                title: 'Ultimate Werewolf',
+                designer: 'Akihisa Okui',
+                owner: 'bainesface',
+                review_img_url:
+                  'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
+                review_body: "We couldn't find the werewolf!",
+                category: 'social deduction',
+                created_at: expect.any(String),
+                votes: 5
+              })
+        })
+    });
+    
 })
