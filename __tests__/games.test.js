@@ -29,7 +29,7 @@ describe("GET", () => {
                 })
             })
         });
-        it.only("400: should respond with an error message when the wrong endpoint is called", () => {
+        it("400: should respond with an error message when the wrong endpoint is called", () => {
             return request(app)
             .get("/api/categori3s/")
             .expect(404)
@@ -38,4 +38,42 @@ describe("GET", () => {
             })
         })
     })
+})
+
+describe("GET /api/reviews/:review_id", () => {
+    it('200: should respond with an object of the correct review', () => {
+        return request(app)
+        .get(`/api/reviews/3`)
+        .expect(200)
+        .then(({body}) => {
+            expect(typeof body.review).toBe('object')
+            expect(body.review).toMatchObject( {
+                title: 'Ultimate Werewolf',
+                designer: 'Akihisa Okui',
+                owner: 'bainesface',
+                review_img_url:
+                  'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
+                review_body: "We couldn't find the werewolf!",
+                category: 'social deduction',
+                created_at: expect.any(String),
+                votes: 5
+              })
+        })
+    });
+    it('404: should respond with "not found" when an invalid id is passed', () => {
+        return request(app)
+        .get("/api/reviews/100000")
+        .expect(404)
+        .then(({body}) => {
+            expect(body.msg).toBe("not found")
+        })
+    });
+    it('400: should respond with "bad request" when a wrong request is passed ', () => {
+        return request(app)
+        .get("/api/reviews/hello")
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe("bad request")
+        })
+    });
 })
