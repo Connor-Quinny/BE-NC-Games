@@ -78,7 +78,7 @@ describe("GET /api/reviews/:review_id", () => {
     });
 })
 
-describe.only("GET: /api/users", () => {
+describe("GET: /api/users", () => {
     it("200: should respond with an array of objects with the correct keys", () => {
         return request(app)
         .get("/api/users")
@@ -95,5 +95,12 @@ describe.only("GET: /api/users", () => {
             })
         })
     });
-    
+    it("404: should respond with not found when passed an incorrect path", () => {
+        return request(app)
+        .get("/api/us3rs")
+        .expect(404)
+        .then(({body}) => {
+            expect(body.msg).toBe("not found")
+        })
+    })
 })
