@@ -11,3 +11,6 @@ exports.selectReviewById = (review_id) => {
     return Promise.reject({status: 400, msg: "bad request"})
 }
 
+exports.patchVotesById = (voteInc, id) => {
+    return db.query("UPDATE votes FROM reviews WHERE review_id = ")
+}

@@ -105,11 +105,12 @@ describe("GET: /api/users", () => {
     })
 })
 
-describe("PATCH: /api/reviews/:review_id", () => {
+describe.only("PATCH: /api/reviews/:review_id", () => {
     it('200: should respond with an updated review with the correct vote count', () => {
+        const votes = { inc_votes: 10 }
         return request(app)
         .patch("/api/reviews/3")
-        .send({ inc_votes: 10 })
+        .send(votes)
         .expect(200)
         .then(({body}) => {
             expect(typeof body.review).toBe("object")
