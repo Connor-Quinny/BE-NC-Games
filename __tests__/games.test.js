@@ -40,13 +40,12 @@ describe("GET", () => {
     })
 })
 
-describe.only("GET /api/reviews/:review_id", () => {
+describe("GET /api/reviews/:review_id", () => {
     it('200: should respond with an object of the correct review', () => {
         return request(app)
         .get(`/api/reviews/3`)
         .expect(200)
         .then(({body}) => {
-            console.log(body.review, "<<<")
             expect(typeof body.review).toBe('object')
             expect(body.review).toMatchObject( {
                 title: 'Ultimate Werewolf',
@@ -61,5 +60,20 @@ describe.only("GET /api/reviews/:review_id", () => {
               })
         })
     });
-    
+    it('404: should respond with "not found" when an invalid id is passed', () => {
+        return request(app)
+        .get("/api/reviews/100000")
+        .expect(404)
+        .then(({body}) => {
+            expect(body.msg).toBe("not found")
+        })
+    });
+    it('400: should respond with "bad request" when a wrong request is passed ', () => {
+        return request(app)
+        .get("/api/reviews/hello")
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe("bad request")
+        })
+    });
 })
