@@ -77,3 +77,30 @@ describe("GET /api/reviews/:review_id", () => {
         })
     });
 })
+
+describe("GET: /api/users", () => {
+    it("200: should respond with an array of objects with the correct keys", () => {
+        return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then(({body}) => {
+            console.log(body)
+            expect(Array.isArray(body.users)).toBe(true)
+            body.users.forEach((user) => {
+                expect(user).toMatchObject({
+                    username: expect.any(String),
+                    name: expect.any(String),
+                    avatar_url: expect.any(String)
+                })
+            })
+        })
+    });
+    it("404: should respond with not found when passed an incorrect path", () => {
+        return request(app)
+        .get("/api/us3rs")
+        .expect(404)
+        .then(({body}) => {
+            expect(body.msg).toBe("not found")
+        })
+    })
+})
