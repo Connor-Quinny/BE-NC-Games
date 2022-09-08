@@ -105,12 +105,11 @@ describe("GET: /api/users", () => {
     })
 })
 
-describe.only("PATCH: /api/reviews/:review_id", () => {
+describe("PATCH: /api/reviews/:review_id", () => {
     it('200: should respond with an updated review with the correct vote count', () => {
-        const votes = { inc_votes: 10 }
         return request(app)
         .patch("/api/reviews/3")
-        .send(votes)
+        .send({ inc_votes: 10 })
         .expect(200)
         .then(({body}) => {
             expect(typeof body.review).toBe("object")
@@ -122,9 +121,27 @@ describe.only("PATCH: /api/reviews/:review_id", () => {
                   'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
                 review_body: "We couldn't find the werewolf!",
                 category: 'social deduction',
-                created_at: new Date(1610964101251),
+                created_at: expect.any(String),
                 votes: 15
             })
         })
     });
+    it("404: should respond with not found when passed an invalid id", () => {
+        return request(app)
+        .patch("/api/reviews/1000000")
+        .send({ inc_votes: 10 })
+        .expect(404)
+        .then(({body}) => {
+            expect(body.msg).toBe("not found")
+        })
+    })
+    it("400: should respond with bad request when an invalid request is passed", () => {
+        return request(app)
+        .patch("/api/reviews/three")
+        .send({ inc_votes: 10})
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe("bad request")
+        })
+    })
 })

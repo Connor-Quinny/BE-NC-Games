@@ -12,5 +12,12 @@ exports.selectReviewById = (review_id) => {
 }
 
 exports.patchVotesById = (voteInc, id) => {
-    return db.query("UPDATE votes FROM reviews WHERE review_id = ")
+    if (typeof id !== "number" && id > 0) {
+    return db.query("UPDATE reviews SET votes = votes + $1 WHERE review_id = $2 RETURNING *", [voteInc, id]).then((review) => {
+        if (review.rows.length === 0) {
+            return Promise.reject({status: 404, msg: "not found"})
+        }
+        return review.rows[0]
+   })}
+    return Promise.reject({status: 400, msg: "bad request"})
 }
