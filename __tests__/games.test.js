@@ -104,3 +104,71 @@ describe("GET: /api/users", () => {
         })
     })
 })
+
+describe("PATCH: /api/reviews/:review_id", () => {
+    it('200: should respond with an updated review with the correct vote count', () => {
+        return request(app)
+        .patch("/api/reviews/3")
+        .send({ inc_votes: 10 })
+        .expect(200)
+        .then(({body}) => {
+            expect(typeof body.review).toBe("object")
+            expect(body.review).toMatchObject({
+                title: 'Ultimate Werewolf',
+                designer: 'Akihisa Okui',
+                owner: 'bainesface',
+                review_img_url:
+                  'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
+                review_body: "We couldn't find the werewolf!",
+                category: 'social deduction',
+                created_at: expect.any(String),
+                votes: 15
+            })
+        })
+    });
+    it("404: should respond with not found when passed an invalid id", () => {
+        return request(app)
+        .patch("/api/reviews/1000000")
+        .send({ inc_votes: 10 })
+        .expect(404)
+        .then(({body}) => {
+            expect(body.msg).toBe("not found")
+        })
+    })
+    it("400: should respond with bad request when an invalid request is passed", () => {
+        return request(app)
+        .patch("/api/reviews/three")
+        .send({ inc_votes: 10})
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe("bad request")
+        })
+    })
+    it("should respond with bad request when an invalid vote count is passed", () => {
+        return request(app)
+        .patch("/api/reviews/3")
+        .send({inc_votes: "hi"})
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe("bad request")
+        })
+    })
+    it("should respond with bad request when passed an empty object", () => {
+        return request(app)
+        .patch("/api/reviews/3")
+        .send({})
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe("bad request")
+        })
+    })
+    it("should respond bad request when the key is wrong when passed", () => {
+        return request(app)
+        .patch("/api/reviews/3")
+        .send({votes: 5})
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe("bad request")
+        })
+    })
+})
