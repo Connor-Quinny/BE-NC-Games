@@ -144,4 +144,33 @@ describe("PATCH: /api/reviews/:review_id", () => {
             expect(body.msg).toBe("bad request")
         })
     })
+    it("should respond with bad request when an invalid vote count is passed", () => {
+        return request(app)
+        .patch("/api/reviews/3")
+        .send({inc_votes: "hi"})
+        .expect(400)
+        .then(({body}) => {
+            console.log(body)
+            expect(body.msg).toBe("bad request")
+        })
+    })
+    it("should respond with bad request when passed an empty object", () => {
+        return request(app)
+        .patch("/api/reviews/3")
+        .send({})
+        .expect(400)
+        .then(({body}) => {
+            console.log(body, "body>>>")
+            expect(body.msg).toBe("bad request")
+        })
+    })
+    it("should respond bad request when the key is wrong when passed", () => {
+        return request(app)
+        .patch("/api/reviews/3")
+        .send({votes: 5})
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe("bad request")
+        })
+    })
 })
