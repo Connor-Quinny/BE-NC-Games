@@ -150,7 +150,6 @@ describe("PATCH: /api/reviews/:review_id", () => {
         .send({inc_votes: "hi"})
         .expect(400)
         .then(({body}) => {
-            console.log(body)
             expect(body.msg).toBe("bad request")
         })
     })
@@ -160,7 +159,6 @@ describe("PATCH: /api/reviews/:review_id", () => {
         .send({})
         .expect(400)
         .then(({body}) => {
-            console.log(body, "body>>>")
             expect(body.msg).toBe("bad request")
         })
     })
