@@ -179,6 +179,7 @@ describe("GET: /api/reviews/:review_id", () => {
         .expect(200)
         .then(({body}) => {
             expect(typeof body.review).toBe("object")
+            expect(body.review).toHaveProperty("comment_count", 3)
             expect(body.review).toMatchObject({
                     title: 'Ultimate Werewolf',
                     designer: 'Akihisa Okui',
@@ -199,6 +200,7 @@ describe("GET: /api/reviews/:review_id", () => {
         .expect(200)
         .then(({body}) => {
             expect(typeof body.review).toBe("object")
+            expect(body.review).toHaveProperty("comment_count", 0)
             expect(body.review).toMatchObject({
                 title: 'One Night Ultimate Werewolf',
                 designer: 'Akihisa Okui',
@@ -223,10 +225,9 @@ describe("GET: /api/reviews/:review_id", () => {
     })
     it("400: should respond with bad request when an invalid request is passed", () => {
         return request(app)
-        .get("/api/revi3ws/3")
+        .get("/api/reviews/three")
         .expect(400)
         .then(({body}) => {
-            console.log(body)
             expect(body.msg).toBe("bad request")
         })
     })
