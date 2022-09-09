@@ -171,3 +171,63 @@ describe("PATCH: /api/reviews/:review_id", () => {
         })
     })
 })
+
+describe("GET: /api/reviews/:review_id", () => {
+    it("200: should respond with an object of review of correct id with a comment_count", () => {
+        return request(app)
+        .get("/api/reviews/3")
+        .expect(200)
+        .then(({body}) => {
+            expect(typeof body.review).toBe("object")
+            expect(body.review).toMatchObject({
+                    title: 'Ultimate Werewolf',
+                    designer: 'Akihisa Okui',
+                    owner: 'bainesface',
+                    review_img_url:
+                      'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
+                    review_body: "We couldn't find the werewolf!",
+                    category: 'social deduction',
+                    created_at: expect.any(String),
+                    votes: 5,
+                    comment_count: 3
+            })
+        })
+    })
+    it("200: should respond with an object of the correct review with the comment count at 0", () => {
+        return request(app)
+        .get("/api/reviews/8")
+        .expect(200)
+        .then(({body}) => {
+            expect(typeof body.review).toBe("object")
+            expect(body.review).toMatchObject({
+                title: 'One Night Ultimate Werewolf',
+                designer: 'Akihisa Okui',
+                owner: 'mallionaire',
+                review_img_url:
+                  'https://images.pexels.com/photos/5350049/pexels-photo-5350049.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
+                review_body: "We couldn't find the werewolf!",
+                category: 'social deduction',
+                created_at: expect.any(String),
+                votes: 5,
+                comment_count: 0
+            })
+        })
+    })
+    it("404: should respond with not found when an invalid id is passed", () => {
+        return request(app)
+        .get("/api/reviews/100000")
+        .expect(404)
+        .then(({body}) => {
+            expect(body.msg).toBe("not found")
+        })
+    })
+    it("400: should respond with bad request when an invalid request is passed", () => {
+        return request(app)
+        .get("/api/revi3ws/3")
+        .expect(400)
+        .then(({body}) => {
+            console.log(body)
+            expect(body.msg).toBe("bad request")
+        })
+    })
+})
