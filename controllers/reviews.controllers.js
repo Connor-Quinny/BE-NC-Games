@@ -1,5 +1,5 @@
 const reviews = require("../db/data/test-data/reviews")
-const { selectReviewById, patchVotesById, selectReviewsByQuery } = require("../models/reviews.models")
+const { selectReviewById, patchVotesById, selectReviewsByQuery, selectReviewComments } = require("../models/reviews.models")
 
 exports.getReviews = (req, res, next) => {
     const param = req.params
@@ -22,9 +22,17 @@ exports.patchReviews = (req, res, next) => {
 
 exports.getReviewsByQuery = (req, res, next) => {
    const category = req.query.category
-//    console.log(category)
    selectReviewsByQuery(category).then((reviews) => {
     res.status(200).send({ reviews });
     })
     .catch(next);
 };
+
+exports.getReviewsComments = (req, res, next) => {
+    const { review_id } = req.params;
+    selectReviewComments(review_id)
+      .then((comments) => {
+        res.status(200).send({ comments });
+      })
+      .catch(next);
+  };
