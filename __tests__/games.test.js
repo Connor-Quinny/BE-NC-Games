@@ -232,3 +232,39 @@ describe("GET: /api/reviews/:review_id", () => {
         })
     })
 })
+
+describe("GET:/api/reviews & accepts queries", () => {
+    it("should respond with an array of review objects with the correct category and comment count", () => {
+        return request(app)
+        .get("/api/reviews/?category=euro game")
+        .expect(200)
+        .then(({body}) => {
+            const { reviews } = body
+            expect(typeof reviews).toBe("object")
+            expect(reviews).toHaveProperty("category", "euro game")
+            expect(reviews).toHaveProperty("comment_count", 0)
+            expect(reviews).toMatchObject({
+                title: 'Agricola',
+                designer: 'Uwe Rosenberg',
+                owner: 'mallionaire',
+                review_img_url:
+                  'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
+                review_body: 'Farmyard fun!',
+                category: 'euro game',
+                created_at: expect.any(String),
+                votes: 1,
+                comment_count: 0
+            })
+        })
+    })
+    describe.only('error handling', () => {
+        test('404: if category given is valid but does not exist', () => {
+          return request(app)
+            .get(`/api/reviews?category=fakenews`)
+            .expect(404)
+            .then(({ body }) => {
+              expect(body.msg).toBe('There is no such category');
+            });
+        });
+      });
+    });
